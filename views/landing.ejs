@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#222">
+    <meta id="meta" name="viewport" content="width=device-width; initial-scale=1.0" />
+
+    <title>FlatShare</title>
+    <link rel="stylesheet" href="/assets/public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/public/css/master.css">
+    <link rel="shortcut icon" type="image/png" href="assets//public/images/favicon.png"/>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="/assets/public/javascript/posting.js"></script>
+<script type="text/javascript">
+      function validate(evt) {
+      var theEvent = evt || window.event;
+      var key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode( key );
+      var regex = /[0-9]|\./;
+      if( !regex.test(key) ) {
+        theEvent.returnValue = false;
+        if(theEvent.preventDefault) theEvent.preventDefault();
+      }
+      }
+</script>
+    <style media="screen">
+    </style>
+  </head>
+  <body style="padding:0px;">
+      <% include partials/navbar.ejs %>
+      <div class="container-fluid" style="height:auto;margin-right:00px; " >
+  <div class="row">
+
+    <div class="container-fluid col-lg-6 col-md-6 col-sm-12 col-xs-12">
+      <div class="container col-lg-12 col-md-12 col-sm-12  col-xs-12">
+        <div class="container left-input">
+            <form>
+                <div class="form-group ">
+                  <label id="lbl">Username</label>
+                <input type="text" class="form-control" placeholder="Enter your Name" id="txt-box" name="user-name" maxlength="10" required>
+                </div>
+                <div class="form-group">
+                  <label id="lbl">Item Name</label>
+                  <input type="text" class="form-control" placeholder="Add item Name" id="txt-box" name="itm-name" maxlength="10" required>
+                </div>
+                <div class="form-group">
+                  <label id="lbl">Price</label>
+                  <input type="text" class="form-control" placeholder="Add Price" id="txt-box" name="itm-price" maxlength="10" required onkeypress='validate(event)'>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-cls">Add</button>
+            </form>
+        </div>
+      </div>
+
+    </div>
+    <div class="container-fluid col-lg-6 col-md-6 col-sm-12 col-xs-12 bg-primary" >
+      <div class="container col-lg-12 col-md-12 col-sm-12  col-xs-12 bg-primary" style="height:600px; overflow-y:auto; padding-right:30px;">
+        <p class="text-center">List of items bought this month</p>
+            <table class="table table-striped table-bordered table-hover table-condensed tb-content">
+              <tr style="background:#fff;color:#000;">
+                <th>Name</th>
+                <th>Item</th>
+                <th>Price</th>
+              </tr>
+              <% if(todos.length === 0){ %>
+                <th>No Items yet</th>
+                <th>No Items yet</th>
+                <th>No Items yet</th>
+                <%}%>
+              <% for(var i=0; i<todos.length; i++){ %>
+                <tr style="background:#fff;color:#000;">
+                <td><%= todos[i].name %></td>
+                <td><%= todos[i].item %></td>
+                <td><%= todos[i].price %></td>
+              </tr>
+                <% } %>
+            </table>
+
+      </div>
+    </div>
+
+
+
+  </div>
+      </div>
+
+
+  </body>
+</html>
