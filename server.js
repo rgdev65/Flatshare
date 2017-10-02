@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var mongooseCachebox=require('mongoose-cachebox');
 var varSum;
 
+const port = process.env.PORT || 3000;
 const api = require('./api/api.js');
 const app = express();
 
@@ -135,7 +136,7 @@ app.post('/landing',urlencodedParser,function(req,res){
 });
 
 
-app.listen(3000,'192.168.0.4',()=>{
+app.listen(port,()=>{
 
-  console.log('We are listening to port 3000');
+  console.log(`We are listening to port ${port}`);
 });
