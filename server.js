@@ -41,31 +41,6 @@
   var urlencodedParser = bodyParser.urlencoded({ extended: false });
   app.set('view engine','ejs');
   app.use('/assets', express.static('assets'));
-
-  app.get('/',(req,res)=>{
-
-    res.redirect(301,'landing');
-  });
-
-  app.get('/landing',(req,res)=>{
-    setTimeout(()=>{Todo.find({},(err,data)=>{
-      if (err) {
-        throw err;
-      }
-      else{
-        initalTotal.find({},(err,tot)=>{
-        res.render('landing.ejs',{todos:data,totals:tot});
-
-        });
-    }
-    });
-  },3000);
-  });
-
-  app.get('*',(req,res)=>{
-
-    res.render('404');
-  });
   app.post('/landing',urlencodedParser,function(req,res){
       var oldSum;
       var oldData;
@@ -133,6 +108,32 @@
 
 
   });
+  
+  app.get('/',(req,res)=>{
+
+    res.redirect(301,'landing');
+  });
+
+  app.get('/landing',(req,res)=>{
+    setTimeout(()=>{Todo.find({},(err,data)=>{
+      if (err) {
+        throw err;
+      }
+      else{
+        initalTotal.find({},(err,tot)=>{
+        res.render('landing.ejs',{todos:data,totals:tot});
+
+        });
+    }
+    });
+  },3000);
+  });
+
+  app.get('*',(req,res)=>{
+
+    res.render('404');
+  });
+
 
 
   app.listen(port,()=>{
