@@ -5,7 +5,7 @@ var mongooseCachebox=require('mongoose-cachebox');
 var varSum;
 
 const port = process.env.PORT || 3000;
-var URI = process.env.MONGOLAB_URI;
+var URI = process.env.MONGODB_URI;
 const api = require('./api/api.js');
 const app = express();
 
