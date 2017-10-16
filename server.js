@@ -108,7 +108,7 @@
 
 
   });
-  
+
   app.get('/',(req,res)=>{
 
     res.redirect(301,'landing');
@@ -122,8 +122,7 @@
       else{
         initalTotal.find({},(err,tot)=>{
         res.render('landing.ejs',{todos:data,totals:tot});
-
-        });
+      });
     }
     });
   },3000);
