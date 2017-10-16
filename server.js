@@ -5,10 +5,16 @@ var mongooseCachebox=require('mongoose-cachebox');
 var varSum;
 
 const port = process.env.PORT || 3000;
+var URI = process.env.MONGOLAB_URI;
 const api = require('./api/api.js');
 const app = express();
 
-mongoose.connect('mongodb://test:test@ds149874.mlab.com:49874/itemdb');
+mongoose.connect(URI,()=>{
+  if (error) {
+    console.log(error);
+  }
+  console.log('Connected to Mlab');
+});
 var options = {
   cache: true, // start caching
   ttl: 30 // 30 seconds
