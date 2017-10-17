@@ -73,7 +73,7 @@ app.post('/landing',urlencodedParser,function(req,res){
     var oldData;
     var newData
     var dataObj= req.body;
-    var newTodo = Todo(dataObj).save((err,data)=>{
+    var newTodo = (new Todo(dataObj)).save((err,data)=>{
       if (err) {
         throw err;
       }
