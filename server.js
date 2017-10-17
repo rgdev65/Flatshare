@@ -73,13 +73,7 @@ app.post('/landing',urlencodedParser,function(req,res){
     var oldData;
     var newData
     var dataObj= req.body;
-    var newTodo = (new Todo(dataObj)).save((err,data)=>{
-      if (err) {
-        throw err;
-      }
-      // console.log('todo');
-      res.json(data);
-    });
+    (new Todo(dataObj)).save();
     var sum = api.calSum(req.body);
     function retrieveUser(callback) {
         initalTotal.find({},(err,data)=>{
