@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const mongooseCachebox=require('mongoose-cachebox');
 const {Todo, initialTotal} = require('./models');
-let varSum;
+
 
 const port = process.env.PORT || 3000;
 
@@ -19,17 +19,6 @@ const options = {
 // // adding mongoose cachebox
 mongooseCachebox(mongoose, options);
 
-// const itemSchema = new mongoose.Schema({
-//   name:String,
-//   item:String,
-//   price:Number,
-//   total:Number,
-// });
-
-
-//creating model for total variable
-
-// const initialTotal = mongoose.model('Total',totalSchema);
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.set('view engine','ejs');
