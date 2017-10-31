@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// const mongooseCachebox=require('mongoose-cachebox');
+const mongooseCachebox=require('mongoose-cachebox');
 const {Todo, initialTotal} = require('./models');
 let varSum;
 
@@ -11,13 +11,13 @@ const api = require('./api/api.js');
 const app = express();
 
 // mongoose.connect('mongodb://test:test@ds149874.mlab.com:49874/itemdb');
-// const options = {
-//   cache: true, // start caching
-//   ttl: 30 // 30 seconds
-// };
+const options = {
+  cache: true, // start caching
+  ttl: 30 // 30 seconds
+};
 
 // // adding mongoose cachebox
-// mongooseCachebox(mongoose, options);
+mongooseCachebox(mongoose, options);
 
 // const itemSchema = new mongoose.Schema({
 //   name:String,
@@ -116,7 +116,7 @@ app.post('/landing',urlencodedParser,function(req,res){
               sectotal:oldSum.sectotal+Number(sum),
             }
         }
-        console.log(newData.total);
+        // console.log(newData.total);
         initialTotal.findOneAndUpdate(oldData, newData, {upsert:true}, function(err, doc){
         if (err) throw err;
         console.log('Saved');

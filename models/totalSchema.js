@@ -10,6 +10,7 @@ const totalSchema = new mongoose.Schema(
 }
 );
 
-const initalTotal = mongoose.model('Total',totalSchema);
+const initialTotal = mongoose.model('Total',totalSchema);
 
-module.exports = initalTotal;
+
+module.exports = initialTotal;
