@@ -1,44 +1,35 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const mongooseCachebox=require('mongoose-cachebox');
-const varSum;
+// const mongooseCachebox=require('mongoose-cachebox');
+const {Todo, initialTotal} = require('./models');
+let varSum;
 
 const port = process.env.PORT || 3000;
 
 const api = require('./api/api.js');
 const app = express();
 
-mongoose.connect('mongodb://test:test@ds149874.mlab.com:49874/itemdb');
-const options = {
-  cache: true, // start caching
-  ttl: 30 // 30 seconds
-};
+// mongoose.connect('mongodb://test:test@ds149874.mlab.com:49874/itemdb');
+// const options = {
+//   cache: true, // start caching
+//   ttl: 30 // 30 seconds
+// };
 
-// adding mongoose cachebox
-mongooseCachebox(mongoose, options);
+// // adding mongoose cachebox
+// mongooseCachebox(mongoose, options);
 
-const itemSchema = new mongoose.Schema({
-  name:String,
-  item:String,
-  price:Number,
-  total:Number,
-});
+// const itemSchema = new mongoose.Schema({
+//   name:String,
+//   item:String,
+//   price:Number,
+//   total:Number,
+// });
 
-//creating schema for total
-
-const totalSchema = new mongoose.Schema(
-  {
-  id:Number,
-  total:Number,
-  sectotal:Number,
-}
-);
-const Todo = mongoose.model('Todo',itemSchema);
 
 //creating model for total variable
 
-const initalTotal = mongoose.model('Total',totalSchema);
+// const initialTotal = mongoose.model('Total',totalSchema);
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.set('view engine','ejs');
@@ -49,13 +40,13 @@ app.get('/',(req,res)=>{
   res.redirect(301,'landing');
 });
 
-app.get('/landing',(req,res)=>{
+app.get('/landing',(req,res) => {
   setTimeout(()=>{Todo.find({},(err,data)=>{
     if (err) {
       throw err;
     }
     else{
-      initalTotal.find({},(err,tot)=>{
+      initialTotal.find({},(err,tot)=>{
       res.render('landing.ejs',{todos:data,totals:tot});
 
       });
@@ -82,7 +73,7 @@ app.post('/landing',urlencodedParser,function(req,res){
     });
     let sum = api.calSum(req.body);
     function retrieveUser(callback) {
-        initalTotal.find({},(err,data)=>{
+        initialTotal.find({},(err,data)=>{
        if(err) callback(null,err);
           else callback(null,data[0]);
      });
@@ -126,7 +117,7 @@ app.post('/landing',urlencodedParser,function(req,res){
             }
         }
         console.log(newData.total);
-        initalTotal.findOneAndUpdate(oldData, newData, {upsert:true}, function(err, doc){
+        initialTotal.findOneAndUpdate(oldData, newData, {upsert:true}, function(err, doc){
         if (err) throw err;
         console.log('Saved');
         });
