@@ -90,9 +90,8 @@ app.post('/landing',urlencodedParser,function(req,res){
       });
     }
     else {
-      newData={id:1, total:dataObj.price, sectotal:0}      
-      const newIT = new initialTotal(newData);
-      newIT.save().then(() => res.redirect('/landing')).catch(err => console.log(err));
+      newData={id:1, total:dataObj.price, sectotal:0}
+      newIT.findOneAndUpdate(newData, {upsert: true},).then(() => res.redirect('/landing')).catch(err => console.log(err));
     }
   },2500);
 });
