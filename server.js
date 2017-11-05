@@ -40,7 +40,7 @@ app.get('/landing',(req,res) => {
         if (err) {
           throw err;
         }
-        console.log(total)
+        // console.log(total)
         res.render('landing.ejs',{todos:data, total:total});
       });
     });
@@ -61,7 +61,7 @@ app.post('/landing',urlencodedParser,function(req,res){
   let sum = api.calSum(req.body);
     
   retrieveUser(function(err, user) {
-    if (err) { console.log(err); }
+    if (err) { throw err }
     
     // console.log(user);
     // console.log('retrieved user is '+user+'\n');
@@ -71,7 +71,7 @@ app.post('/landing',urlencodedParser,function(req,res){
   });
 
   setTimeout(()=>{ // Why
-    console.log(dataObj);
+    // console.log(dataObj);
     let name = dataObj.name.toLowerCase();
   
     if (name === 'rahul' && oldData) {
@@ -91,7 +91,7 @@ app.post('/landing',urlencodedParser,function(req,res){
     }
     else {
       newData={id:1, total:dataObj.price, sectotal:0}
-      newIT.findOneAndUpdate(newData, {upsert: true},).then(() => res.redirect('/landing')).catch(err => console.log(err));
+      initialTotal.findOneAndUpdate(newData, {upsert: true},).then(() => res.redirect('/landing')).catch(err => console.log(err));
     }
   },2500);
 });
