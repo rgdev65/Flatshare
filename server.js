@@ -30,18 +30,19 @@ app.get('/',(req,res)=>{
 });
 
 app.get('/landing',(req,res) => {
-  setTimeout(()=>{Todo.find({},(err,data)=>{
-    if (err) {
-      throw err;
-    }
-    else{
-      initialTotal.find({},(err,tot)=>{
-      res.render('landing.ejs',{todos:data,totals:tot});
-
+  setTimeout(() => {// Why?
+    Todo.find({}, (err, data) => { 
+      if (err) {
+        throw err;
+      }
+      initialTotal.find({}, (err, tot) => {
+        if (err) {
+          throw err;
+        }
+        res.render('landing.ejs',{todos:data,totals:tot});
       });
-  }
-  });
-},3000);
+    });
+  },3000);
 });
 
 
