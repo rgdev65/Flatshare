@@ -50,7 +50,8 @@ app.post('/landing',urlencodedParser,function(req,res){
     let oldSum;
     let oldData;
     let newData
-    let dataObj= req.body;
+    let dataObj = req.body;
+  
     (new Todo(dataObj)).save((err,data)=>{
       if (err) {
         throw err;
