@@ -20,13 +20,12 @@ const options = {
 // adding mongoose cachebox
 mongooseCachebox(mongoose, options);
 
-
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.set('view engine','ejs');
 app.use('/assets', express.static('assets'));
 
+// redirecting to the landing page
 app.get('/',(req,res)=>{
-
   res.redirect(301,'landing');
 });
 
@@ -45,10 +44,7 @@ app.get('/landing',(req,res) => {
 },3000);
 });
 
-app.get('*',(req,res)=>{
 
-  res.render('404');
-});
 app.post('/landing',urlencodedParser,function(req,res){
     let oldSum;
     let oldData;
@@ -112,14 +108,13 @@ app.post('/landing',urlencodedParser,function(req,res){
         console.log('Saved');
         });
     },2500);
-
-
-
-
 });
 
+// should be at the bottom
+app.get('*',(req,res)=>{
+  res.render('404');
+});
 
 app.listen(port,()=>{
-
   console.log(`We are listening to port ${port}`);
 });
