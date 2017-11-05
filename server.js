@@ -48,64 +48,48 @@ app.get('/landing',(req,res) => {
 
 
 app.post('/landing',urlencodedParser,function(req,res){
-    let oldSum;
-    let oldData;
-    let newData
-    let dataObj = req.body;
-  
-    (new Todo(dataObj)).save((err,data)=>{
-      if (err) {
-        throw err;
-      }
-      // console.log('todo');
-      res.json(data);
-    });
-    let sum = api.calSum(req.body);
-    
+  let oldSum, oldData, newData;
+  const dataObj = req.body;
 
+  (new Todo(dataObj)).save((err,data)=>{
+    if (err) { throw err;}
+    // console.log('todo');
+    res.json(data);
+  });
+
+  let sum = api.calSum(req.body);
+    
   retrieveUser(function(err, user) {
-  if (err) {
-    console.log(err);
-  }
-  // console.log(user);
-  // console.log('retrieved user is '+user+'\n');
-  oldSum = user;
-  console.log('Now the old Sum is' + oldSum);
-  // console.log(oldSum.total);
-});
-    setTimeout(()=>{
-        console.log(dataObj);
-      var name =dataObj.name.toLowerCase();;
-        if (name==='rahul') {
-          oldData={
-            id:1,
-            total:oldSum.total,
-            sectotal:oldSum.sectotal,
-          }
-          newData={
-            id:1,
-            total:oldSum.total+Number(sum),
-            sectotal:oldSum.sectotal,
-          }
-        }
-          else if(name==='rohit'){
-            oldData={
-              id:1,
-              total:oldSum.total,
-              sectotal:oldSum.sectotal,
-            }
-            newData={
-              id:1,
-              total:oldSum.total,
-              sectotal:oldSum.sectotal+Number(sum),
-            }
-        }
-        // console.log(newData.total);
-        initialTotal.findOneAndUpdate(oldData, newData, {upsert:true}, function(err, doc){
+    if (err) { console.log(err); }
+    
+    // console.log(user);
+    // console.log('retrieved user is '+user+'\n');
+    
+    oldSum = user;
+    console.log('Now the old Sum is: ' + oldSum);
+    // console.log(oldSum.total);
+  });
+
+  setTimeout(()=>{ // Why
+    console.log(dataObj);
+    let name = dataObj.name.toLowerCase();
+  
+    if (name === 'rahul' && oldData) {
+      oldData = {id:1, total:oldSum.total, sectotal:oldSum.sectotal}
+      newData = {id:1, total:oldSum.total+Number(sum), sectotal:oldSum.sectotal}
+    }
+    else if(name==='rohit' && oldData){
+      oldData = {id:1, total:oldSum.total, sectotal:oldSum.sectotal}
+      newData={id:1, total:oldSum.total, sectotal:oldSum.sectotal+Number(sum)}
+    }
+    // console.log(newData.total);
+    if (oldData) { // proceed if old data exists 
+      initialTotal.findOneAndUpdate(oldData, newData, {upsert:true}, function(err, doc){
         if (err) throw err;
         console.log('Saved');
-        });
-    },2500);
+      });
+    }
+  },2500);
 });
 
 // should be at the bottom
