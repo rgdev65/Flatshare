@@ -4,6 +4,7 @@ const mongoose = require('./db');
 const mongooseCachebox=require('mongoose-cachebox');
 const {Todo, initialTotal} = require('./models');
 const morgan = require('morgan');
+const config = require('./config');
 
 const port = process.env.PORT || 3000;
 
@@ -16,7 +17,7 @@ const options = {
   ttl: 30 // 30 seconds
 };
 
-// // adding mongoose cachebox
+// adding mongoose cachebox
 mongooseCachebox(mongoose, options);
 
 
