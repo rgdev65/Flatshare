@@ -1,4 +1,4 @@
-const {Todo, initialTotal} = require('./models');
+const {Todo, initialTotal} = require('../models');
 
 function retrieveUser(callback) {
   initialTotal.find({},(err,data) => {
@@ -6,3 +6,7 @@ function retrieveUser(callback) {
     else callback(null,data[0]);
   });
 };
+
+module.exports = {
+  retrieveUser
+}

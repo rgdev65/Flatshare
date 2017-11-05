@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('./db');
 const mongooseCachebox=require('mongoose-cachebox');
 const {Todo, initialTotal} = require('./models');
+const {retrieveUser} = require('./helpers');
 const morgan = require('morgan');
 const config = require('./config');
 
@@ -60,12 +61,7 @@ app.post('/landing',urlencodedParser,function(req,res){
       res.json(data);
     });
     let sum = api.calSum(req.body);
-    function retrieveUser(callback) {
-        initialTotal.find({},(err,data)=>{
-       if(err) callback(null,err);
-          else callback(null,data[0]);
-     });
-   };
+    
 
   retrieveUser(function(err, user) {
   if (err) {
