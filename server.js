@@ -5,7 +5,6 @@ const mongooseCachebox=require('mongoose-cachebox');
 const {Todo, initialTotal} = require('./models');
 const {retrieveUser} = require('./helpers');
 const config = require('./config');
-
 const port = process.env.PORT || 3000;
 
 const api = require('./api/api.js');
@@ -17,9 +16,8 @@ const options = {
   ttl: 30 // 30 seconds
 };
 
-// adding mongoose cachebox
+// // adding mongoose cachebox
 mongooseCachebox(mongoose, options);
-
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.set('view engine','ejs');
 app.use('/assets', express.static('assets'));
@@ -45,7 +43,6 @@ app.get('/landing',(req,res) => {
     });
   },3000);
 });
-
 
 app.post('/landing',urlencodedParser,function(req,res){
   let oldSum, oldData, newData;
