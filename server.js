@@ -27,7 +27,7 @@ app.use('/assets', express.static('assets'));
 
 // redirecting to the landing page
 app.get('/',(req,res)=>{
-  res.redirect(301,'landing');
+  res.redirect(301,'/landing');
 });
 
 app.get('/landing',(req,res) => {
@@ -64,7 +64,6 @@ app.post('/landing',urlencodedParser,function(req,res){
     
     // console.log(user);
     // console.log('retrieved user is '+user+'\n');
-    
     oldSum = user;
     console.log('Now the old Sum is: ' + oldSum);
     // console.log(oldSum.total);
@@ -88,6 +87,10 @@ app.post('/landing',urlencodedParser,function(req,res){
         if (err) throw err;
         console.log('Saved');
       });
+    }
+    else {
+      const newIT = new initialTotal(newData);
+      newIT.save().then(() => res.redirect('/landing')).catch(err => console.log(err));
     }
   },2500);
 });

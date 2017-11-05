@@ -1,9 +1,10 @@
 const {Todo, initialTotal} = require('../models');
 
 function retrieveUser(callback) {
-  initialTotal.find({},(err,data) => {
-    if(err) callback(null,err);
-    else callback(null,data[0]);
+  initialTotal.find({}, (err, data) => {
+    console.log(data);
+    if(err) callback(err, null);
+    else callback(null, data[0]);
   });
 };
 
