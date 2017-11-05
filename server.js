@@ -1,144 +1,102 @@
 const express = require('express');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var mongooseCachebox=require('mongoose-cachebox');
-var varSum;
-
+const bodyParser = require('body-parser');
+const mongoose = require('./db');
+const mongooseCachebox=require('mongoose-cachebox');
+const {Todo, initialTotal} = require('./models');
+const {retrieveUser} = require('./helpers');
+const config = require('./config');
 const port = process.env.PORT || 3000;
 
 const api = require('./api/api.js');
 const app = express();
 
-mongoose.connect('mongodb://test:test@ds149874.mlab.com:49874/itemdb');
-var options = {
+// mongoose.connect('mongodb://test:test@ds149874.mlab.com:49874/itemdb');
+const options = {
   cache: true, // start caching
   ttl: 30 // 30 seconds
 };
 
-// adding mongoose cachebox
+// // adding mongoose cachebox
 mongooseCachebox(mongoose, options);
-
-var itemSchema = new mongoose.Schema({
-  name:String,
-  item:String,
-  price:Number,
-  total:Number,
-});
-
-//creating schema for total
-
-var totalSchema = new mongoose.Schema(
-  {
-  id:Number,
-  total:Number,
-  sectotal:Number,
-}
-);
-var Todo = mongoose.model('Todo',itemSchema);
-
-//creating model for total variable
-
-var initalTotal = mongoose.model('Total',totalSchema);
-
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.set('view engine','ejs');
 app.use('/assets', express.static('assets'));
 
+// redirecting to the landing page
 app.get('/',(req,res)=>{
-
-  res.redirect(301,'landing');
+  res.redirect(301,'/landing');
 });
 
-app.get('/landing',(req,res)=>{
-  setTimeout(()=>{Todo.find({},(err,data)=>{
-    if (err) {
-      throw err;
-    }
-    else{
-      initalTotal.find({},(err,tot)=>{
-      res.render('landing.ejs',{todos:data,totals:tot});
-
-      });
-  }
-  });
-},3000);
-});
-
-app.get('*',(req,res)=>{
-
-  res.render('404');
-});
-app.post('/landing',urlencodedParser,function(req,res){
-    var oldSum;
-    var oldData;
-    var newData
-    var dataObj= req.body;
-    (new Todo(dataObj)).save((err,data)=>{
+app.get('/landing',(req,res) => {
+  setTimeout(() => {// Why?
+    Todo.find({}, (err, data) => { 
       if (err) {
         throw err;
       }
-      // console.log('todo');
-      res.json(data);
+      initialTotal.find({}, (err, total) => {
+        if (err) {
+          throw err;
+        }
+        // console.log(total)
+        res.render('landing.ejs',{todos:data, total:total});
+      });
     });
-    var sum = api.calSum(req.body);
-    function retrieveUser(callback) {
-        initalTotal.find({},(err,data)=>{
-       if(err) callback(null,err);
-          else callback(null,data[0]);
-     });
-   };
-
-  retrieveUser(function(err, user) {
-  if (err) {
-    console.log(err);
-  }
-  // console.log(user);
-  // console.log('retrieved user is '+user+'\n');
-  oldSum = user;
-  console.log('Now the old Sum is' + oldSum);
-  // console.log(oldSum.total);
+  },3000);
 });
-    setTimeout(()=>{
-        console.log(dataObj);
-      var name =dataObj.name.toLowerCase();;
-        if (name==='rahul') {
-          oldData={
-            id:1,
-            total:oldSum.total,
-            sectotal:oldSum.sectotal,
-          }
-          newData={
-            id:1,
-            total:oldSum.total+Number(sum),
-            sectotal:oldSum.sectotal,
-          }
-        }
-          else if(name==='rohit'){
-            oldData={
-              id:1,
-              total:oldSum.total,
-              sectotal:oldSum.sectotal,
-            }
-            newData={
-              id:1,
-              total:oldSum.total,
-              sectotal:oldSum.sectotal+Number(sum),
-            }
-        }
-        console.log(newData.total);
-        initalTotal.findOneAndUpdate(oldData, newData, {upsert:true}, function(err, doc){
+
+app.post('/landing',urlencodedParser,function(req,res){
+  let oldSum, oldData, newData;
+  const dataObj = req.body;
+
+  (new Todo(dataObj)).save((err,data)=>{
+    if (err) { throw err;}
+    // console.log('todo');
+    res.json(data);
+  });
+
+  let sum = api.calSum(req.body);
+    
+  retrieveUser(function(err, user) {
+    if (err) { throw err }
+    
+    // console.log(user);
+    // console.log('retrieved user is '+user+'\n');
+    oldSum = user;
+    console.log('Now the old Sum is: ' + oldSum);
+    // console.log(oldSum.total);
+  });
+
+  setTimeout(()=>{ // Why
+    // console.log(dataObj);
+    let name = dataObj.name.toLowerCase();
+  
+    if (name === 'rahul' && oldData) {
+      oldData = {id:1, total:oldSum.total, sectotal:oldSum.sectotal}
+      newData = {id:1, total:oldSum.total + Number(sum), sectotal:oldSum.sectotal}
+    }
+    else if(name==='rohit' && oldData){
+      oldData = {id:1, total:oldSum.total, sectotal:oldSum.sectotal}
+      newData={id:1, total:oldSum.total, sectotal:oldSum.sectotal + Number(sum)}
+    }
+    // console.log(newData.total);
+    if (oldData) { // proceed if old data exists 
+      initialTotal.findOneAndUpdate(oldData, newData, {upsert:true}, function(err, doc){
         if (err) throw err;
         console.log('Saved');
-        });
-    },2500);
-
-
-
-
+      });
+    }
+    else {
+      newData={id:1, total:dataObj.price, sectotal:0}
+      initialTotal.findOneAndUpdate({id: newData.id}, newData, {upsert: true},).then(() => res.redirect('/landing')).catch(err => console.log(err));
+    }
+  },2500);
 });
 
+// should be at the bottom
+app.get('*',(req,res)=>{
+  res.render('404');
+});
 
 app.listen(port,()=>{
-
   console.log(`We are listening to port ${port}`);
 });
