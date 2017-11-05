@@ -36,11 +36,12 @@ app.get('/landing',(req,res) => {
       if (err) {
         throw err;
       }
-      initialTotal.find({}, (err, tot) => {
+      initialTotal.find({}, (err, total) => {
         if (err) {
           throw err;
         }
-        res.render('landing.ejs',{todos:data,totals:tot});
+        console.log(total)
+        res.render('landing.ejs',{todos:data, total:total});
       });
     });
   },3000);
@@ -75,11 +76,11 @@ app.post('/landing',urlencodedParser,function(req,res){
   
     if (name === 'rahul' && oldData) {
       oldData = {id:1, total:oldSum.total, sectotal:oldSum.sectotal}
-      newData = {id:1, total:oldSum.total+Number(sum), sectotal:oldSum.sectotal}
+      newData = {id:1, total:oldSum.total + Number(sum), sectotal:oldSum.sectotal}
     }
     else if(name==='rohit' && oldData){
       oldData = {id:1, total:oldSum.total, sectotal:oldSum.sectotal}
-      newData={id:1, total:oldSum.total, sectotal:oldSum.sectotal+Number(sum)}
+      newData={id:1, total:oldSum.total, sectotal:oldSum.sectotal + Number(sum)}
     }
     // console.log(newData.total);
     if (oldData) { // proceed if old data exists 
