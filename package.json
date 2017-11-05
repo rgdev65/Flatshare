@@ -20,5 +20,8 @@
     "hbs": "^4.0.1",
     "mongoose": "^4.10.8",
     "mongoose-cachebox": "^1.2.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.9.0"
   }
 }
