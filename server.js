@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+const mongoose = require('./db');
 const mongooseCachebox=require('mongoose-cachebox');
 const {Todo, initialTotal} = require('./models');
 
